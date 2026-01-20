@@ -1,73 +1,19 @@
-# React + TypeScript + Vite
+# Stellar Wallets Kit Workshop
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Este repositorio contiene el código fuente desarrollado durante el workshop sobre integración de billeteras en el ecosistema Stellar.
 
-Currently, two official plugins are available:
+## 🛠 Herramientas y Stack Tecnológico
+Este proyecto ha sido construido utilizando las siguientes tecnologías:
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+* **Vite + React:** Para la estructura del frontend, optimizado para velocidad.
+* **TypeScript:** Para garantizar el tipado seguro al interactuar con la blockchain.
+* **Stellar Wallets Kit:** Librería principal que actúa como "puente" unificado para conectar múltiples billeteras con una sola implementación.
+* **Stellar Sdk:** SDK oficial para construir las transacciones (XDR) que luego serán firmadas por el kit.
 
-## React Compiler
+## ¿Para qué sirve este código?
+El objetivo de este proyecto es resolver la fragmentación de billeteras en dApps de Stellar. Específicamente, este código permite:
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
-
-## Expanding the ESLint configuration
-
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
-
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
-
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
-
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
-
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
-
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+1.  **Abstracción de Conexión:** Invocar un modal estandarizado que permite al usuario elegir su wallet preferida (Freighter, xBull, Albedo, WalletConnect, etc.).
+2.  **Gestión de Sesión:** Obtener y mostrar la clave pública (Public Key) del usuario y su balance en tiempo real.
+3.  **Firma de Transacciones:** Construir una operación de pago en el código y solicitar la firma a la wallet conectada sin necesidad de gestionar la lógica privada de cada proveedor.
+4.  **Interacción con Testnet:** Probar flujos reales de dinero utilizando la red de prueba de Stellar (sin costo real).
