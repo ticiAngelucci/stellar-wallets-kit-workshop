@@ -36,11 +36,7 @@ function App() {
   // Creamos el kit UNA SOLA VEZ y lo reutilizamos.
   // Esto evita que el modal o las referencias internas se reinicien.
   const kit = useMemo(() => {
-    return new StellarWalletsKit({
-      // Registramos los modulos de wallet que queremos soportar.
-      network: WalletNetwork.TESTNET,
-      modules: [new FreighterModule(), new AlbedoModule()],
-    })
+    // TODO: 1. Inicializar el StellarWalletsKit con Testnet y los módulos (Freighter, Albedo).
   }, [])
 
   // ------------------------------------------------------------
@@ -110,17 +106,7 @@ function App() {
   // ------------------------------------------------------------
   // Pedimos a Horizon el balance nativo (XLM) de una cuenta.
   const fetchBalance = async (address: string) => {
-    try {
-      const account = await server.loadAccount(address)
-      const native = account.balances.find((item) => item.asset_type === 'native')
-      setBalance(native?.balance ?? '0')
-    } catch (error) {
-      setBalance(null)
-      handleError(
-        error,
-        'No se pudo cargar el balance. Revisa que la cuenta este fondeada en Testnet.'
-      )
-    }
+    // TODO: 3. Consultar balance en Horizon usando server.loadAccount.
   }
 
   // ------------------------------------------------------------
@@ -136,31 +122,12 @@ function App() {
     setIsConnecting(true)
 
     try {
-      await kit.openModal({
-        onWalletSelected: async (option) => {
-          // Guardamos el tipo de wallet seleccionada.
-          kit.setWallet(option.id)
-          setSelectedWallet(option.name)
-
-          try {
-            // Pedimos la direccion publica a la wallet.
-            const { address } = await kit.getAddress()
-            setPublicKey(address)
-            // Una vez que tenemos direccion, consultamos balance.
-            await fetchBalance(address)
-          } catch (error) {
-            handleError(error, 'No se pudo obtener la direccion.')
-          } finally {
-            setIsConnecting(false)
-          }
-        },
-        onClosed: () => {
-          setIsConnecting(false)
-        },
-      })
+      // TODO: 2. Abrir el modal del kit (openModal).
+      // - En onWalletSelected: persistir wallet, guardar address y llamar a fetchBalance.
     } catch (error) {
-      setIsConnecting(false)
       handleError(error, 'No se pudo abrir el selector de wallets.')
+    } finally {
+      setIsConnecting(false)
     }
   }
 
@@ -206,35 +173,11 @@ function App() {
 
     setIsSending(true)
     try {
-      // 1) Cargar cuenta origen (trae el sequence actual).
-      const account = await server.loadAccount(publicKey)
-      // 2) Construir la transaccion con un pago en XLM.
-      const transaction = new TransactionBuilder(account, {
-        fee: BASE_FEE,
-        networkPassphrase: NETWORK_PASSPHRASE,
-      })
-        .addOperation(
-          Operation.payment({
-            destination,
-            asset: Asset.native(),
-            amount,
-          })
-        )
-        .addMemo(Memo.text('Stellar Wallets Kit'))
-        .setTimeout(180)
-        .build()
-
-      // 3) Pedir firma a la wallet. La wallet devuelve el XDR firmado.
-      const { signedTxXdr } = await kit.signTransaction(transaction.toXDR(), {
-        networkPassphrase: NETWORK_PASSPHRASE,
-      })
-      // 4) Enviar el XDR firmado a Horizon para publicarlo en Testnet.
-      const signedTx = TransactionBuilder.fromXDR(signedTxXdr, NETWORK_PASSPHRASE)
-      const result = await server.submitTransaction(signedTx)
-
-      setLastTxHash(result.hash)
-      setStatus('Transaccion enviada a Testnet.')
-      await fetchBalance(publicKey)
+      // TODO: 4. Construir y enviar transacción.
+      // a. Cargar cuenta origen (source account).
+      // b. Construir transacción (TransactionBuilder + Operation.payment).
+      // c. Firmar transacción con el kit (kit.signTransaction).
+      // d. Enviar transacción a Horizon (server.submitTransaction).
     } catch (error) {
       const parsed = parseHorizonError(error)
       if (parsed) {
