@@ -1,4 +1,4 @@
-ahi te parece bien como estructura? import { useMemo, useState, type FormEvent } from 'react'
+import { useMemo, useState, type FormEvent } from 'react'
 import {
   AlbedoModule,
   FreighterModule,
